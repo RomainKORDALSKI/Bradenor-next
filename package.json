@@ -31,7 +31,7 @@
     "next-connect": "^1.0.0",
     "next-session": "^4.0.5",
     "nodemailer": "^6.9.14",
-    "pg": "^8.12.0",
+    "pg": "^8.13.0",
     "react": "^18",
     "react-datepicker": "^6.9.0",
     "react-dom": "^18",
