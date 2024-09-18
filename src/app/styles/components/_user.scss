@@ -1,0 +1,105 @@
+.login, .register {
+    background-color: $white1;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba($color-3, 0.1);
+    max-width: 400px;
+    margin: 3rem auto;
+  
+    h1, h2 {
+      color: $color-1;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+  
+
+    form {
+        display: flex;
+        flex-direction: column;
+    
+        div {
+          margin-bottom: 1rem;
+    
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: $color-1;
+          }
+    
+          input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid $grey1;
+            border-radius: 5px;
+    
+            &:focus {
+              border-color: $color-1;
+              outline: none;
+            }
+          }
+        }
+    
+        .passwordContainer {
+          position: relative;
+    
+          input {
+            padding-right: 2.5rem;
+          }
+    
+          .eyeIcon {
+            position: absolute;
+            right: 0.5rem;
+            top: 67%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: $grey1;
+    
+            &:hover {
+              color: $color-1;
+            }
+          }
+        }
+    
+        button {
+          padding: 0.75rem;
+          background-color: $color-1;
+          color: $white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+    
+          &:hover {
+            background-color: darken($color-1, 10%);
+          }
+        }
+      }
+.errorMessage {
+    display: flex;
+    align-items: center;
+    background-color: #FFD2D2;
+    color:  #D8000C;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+
+    .errorIcon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  p {
+    margin-top: 1rem;
+    color: $color-3;
+
+    a {
+      color: $color-1;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

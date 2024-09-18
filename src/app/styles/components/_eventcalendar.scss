@@ -1,0 +1,61 @@
+.event-day {
+  background-color: #f6eeac !important; /* Couleur de fond */
+  color: #000 !important; /* Couleur du texte */
+  border-radius: 50% !important; /* Forme circulaire */
+  font-weight: bold !important; /* Texte en gras */
+  border: 2px solid #ff9800 !important; /* Bordure */
+}
+
+/* Jour sélectionné */
+.react-datepicker__day--selected {
+  background-color: $color-2 !important; /* Couleur de fond */
+  color: $color-1 !important; /* Couleur du texte */
+  border-radius: 50% !important; /* Forme circulaire */
+}
+
+/* Survol des jours */
+.react-datepicker__day:hover {
+  background-color: $white !important; /* Couleur de fond au survol */
+}
+
+/* Weekends */
+.react-datepicker__day--weekend {
+  color: #d32f2f !important; /* Couleur du texte pour les weekends */
+}
+
+/* Jours hors du mois actuel */
+.react-datepicker__day--outside-month {
+  color: #9e9e9e !important; /* Couleur du texte */
+}
+
+/* Container du calendrier */
+.react-datepicker {
+  border: 1px solid $white1 !important; /* Bordure du calendrier */
+  border-radius: 10px !important; /* Coins arrondis */
+  padding: 10px !important; /* Padding */
+  background-color: $white !important;/* Ombre */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  button {
+    top:10px !important;
+    .react-datepicker__year-read-view--down-arrow, .react-datepicker__month-read-view--down-arrow, .react-datepicker__month-year-read-view--down-arrow, .react-datepicker__navigation-icon::before {
+      border-color: $color-2 !important; 
+    }
+    
+  }
+}
+
+/* Header du calendrier */
+.react-datepicker__header {
+  background-color: $color-1 !important; /* Couleur de fond */
+  color: $color-2 !important; /* Couleur du texte */
+  border-radius: 10px !important;
+  border-bottom: 1px solid #1976d2 !important; /* Bordure en bas */
+}
+
+/* Changement du mois et de l'année */
+.react-datepicker__current-month, .react-datepicker__navigation {
+  color: $color-2 !important;
+  text-transform: uppercase !important; /* Couleur du texte */
+}
+
+

@@ -1,0 +1,31 @@
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  .scroll-to-top__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: $color-1;
+    color: $color-2;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .scroll-to-top__button:hover {
+    background-color: $color-2;
+    color: $color-1;
+    transform: translateY(-1px);
+  }
+  
+  .scroll-to-top__button:active {
+    transform: translateY(1px);
+  }
+  

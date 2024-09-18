@@ -1,0 +1,163 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: $color-1;
+  color: $color-2;
+
+  a {
+    color: $color-2;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+  }
+
+  &__menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: $white;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #f0f0f0;
+    }
+  }
+
+  &__menu {
+    list-style-type: none;
+    padding: 0;
+    position: fixed;
+    top: 4.2rem;
+    left: -250px;
+    background-color: $white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    width: 150px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease, left 0.3s ease;
+
+    &.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      left: 0;
+    }
+
+    li {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      a {
+        color: $color-1 !important;
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $white1;
+          border-radius: 1rem;
+        }
+      }
+    }
+  }
+
+  &__middle {
+    flex: 1;
+    text-align: center;
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  &__login-button,
+  &__logout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: $color-1 !important;
+    padding: 2.5px 5px !important;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      color: $white1;
+    }    
+    svg {
+      font-size: 1rem;
+    }
+    a {
+      color: $color-1;
+      padding: 2.5px 5px;
+   }
+  }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+
+    span {
+      margin-right: 0.75rem;
+      font-weight: bold;
+    }
+  }
+ 
+}
+
+@media (max-width: 770px) {
+  .header {
+    &__menu {
+      width: 100% !important;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    &__right {
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    &__user-info {
+      margin-right: 0;
+      margin-bottom: 0.5rem;
+      flex-direction: column;
+      align-items: flex-end;
+
+      span {
+        margin-right: 0;
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
+}
+  
+  

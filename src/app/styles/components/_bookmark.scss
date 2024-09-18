@@ -1,0 +1,65 @@
+.favorite-events {
+    .favorite-p {
+        font-size: 0.8rem;
+        color: $color-2;
+        text-transform: uppercase;
+        text-align: center;
+        background-color: $color-1;
+        border-radius: 7px;
+        width: 300px;
+        padding: 0.5rem;
+        margin: 10px auto;
+    }
+    .eventlist {
+        padding: 0.5rem;
+        h3 {
+          width: 100%;
+          font-size: 1.2rem;
+        }
+      }
+      .event-card {
+        flex-direction: column;
+        h4 {
+            font-size: 0.8rem;
+        }
+      }
+      .event-info {
+        width: 100%;
+        p{
+        margin: 5px 2px 0 0 ;
+        font-size: 0.8rem;
+        }
+      }
+      .exposant-info {
+        gap: 5px;
+        width: 100%;
+        padding: 0;
+        p{
+            font-size: 0.8rem;
+        }
+      }
+      .exposant-info-container {
+        svg {
+            font-size: 12px !important;
+        }
+    }  
+      .event-header {
+        gap: 5px;
+        width: 100%;
+        padding: 0;
+      }
+      .icon {
+        width: 17px;
+      }
+      h2{
+        font-size: 0.8rem;
+        color: $color-2;
+        text-transform: uppercase;
+        text-align: center;
+        background-color: $color-1;
+        border-radius: 7px;
+        width: 300px;
+        padding: 0.5rem;
+        margin: 10px auto;
+      }
+}

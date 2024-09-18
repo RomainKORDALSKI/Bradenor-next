@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "braderie",
+    "password": "braderie",
+    "database": "braderie",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "braderie",
+    "password": "braderie",
+    "database": "braderie",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "braderie",
+    "password": "braderie",
+    "database": "braderie",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
+

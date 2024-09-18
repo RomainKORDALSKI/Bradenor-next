@@ -1,0 +1,64 @@
+@font-face {
+    font-family: "font-1";
+    src: url(../../../public/assets/fonts/JosefinSans-Medium.ttf);
+  }
+  
+  $font-1: "font-1", sans-serif;
+  
+  $color-1: #437C90; //==bg header
+  $color-2: #f7c548d2; //== font dans bg
+  $color-3: #282c34;
+  $white: #EEEBD3; //bg
+  $white1: #eae5c1;
+  $grey1:#ccc;
+  $grey2:#eee;
+  
+  @mixin verticalCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: $white;
+    font-family: $font-1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.8rem;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    background-color: $color-1;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: $white;
+  }
+
+  #map {
+    height: 400px;
+}
+
+.leaflet-popup-content {
+    font-size: 14px;
+}
+
+.map-container {
+  height: 600px;
+  width: 100%;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-container .leaflet-container {
+  border-radius: 8px;
+}
