@@ -1,54 +1,79 @@
+// @font-face {
+//     font-family: "font-1";
+//     src: url(../../../public/assets/fonts/JosefinSans-Medium.ttf);
+//   }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
-    font-family: "font-1";
-    src: url(../../../public/assets/fonts/JosefinSans-Medium.ttf);
-  }
-  
-  $font-1: "font-1", sans-serif;
-  
-  $color-1: #437C90; //==bg header
-  $color-2: #f7c548d2; //== font dans bg
-  $color-3: #282c34;
-  $white: #EEEBD3; //bg
-  $white1: #eae5c1;
-  $grey1:#ccc;
-  $grey2:#eee;
-  
-  @mixin verticalCenter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    background: $white;
-    font-family: $font-1;
-  }
+  font-family: "JosefinSans-Medium";
+  src: url("../../../public/assets/fonts/JosefinSans-Medium.ttf")
+    format("truetype");
+}
 
-  ::-webkit-scrollbar {
-    width: 0.8rem;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    border-radius: 1rem;
-    background-color: $color-1;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background-color: $white;
-  }
+body {
+  @apply bg-background font-sans;
+}
 
-  #map {
-    height: 400px;
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-primary;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+$font-1: "font-1", sans-serif;
+
+$color-1: #437c90; //==bg header
+$color-2: #f7c548d2; //== font dans bg
+$color-3: #282c34;
+$white: #eeebd3; //bg
+$white1: #eae5c1;
+$grey1: #ccc;
+$grey2: #eee;
+
+@mixin verticalCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: $white;
+  font-family: $font-1;
+}
+
+// ::-webkit-scrollbar {
+//   width: 0.8rem;
+// }
+
+// ::-webkit-scrollbar-thumb {
+//   border-radius: 1rem;
+//   background-color: $color-1;
+// }
+
+// ::-webkit-scrollbar-track {
+//   background-color: $white;
+// }
+
+#map {
+  height: 400px;
 }
 
 .leaflet-popup-content {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .map-container {

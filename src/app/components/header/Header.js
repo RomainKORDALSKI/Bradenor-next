@@ -1,79 +1,175 @@
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { FiMenu, FiX, FiUser, FiLogOut } from 'react-icons/fi';
-import { useRouter } from 'next/router';
+"use client";
 
-const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Menu,
+  X,
+  User,
+  LogOut,
+  Home,
+  UserPlus,
+  Calendar,
+  Mail,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+export default function Header() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
         setUser(decodedToken);
       } catch (error) {
-        console.error('Erreur lors du décodage du token:', error);
+        console.error("Erreur lors du décodage du token:", error);
       }
     }
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setUser(null);
-    router.push('/');
+    router.push("/");
   };
 
-  return (
-    <header className="header">
-  <div className="header__left">
-    <button className="header__menu-toggle" onClick={toggleMenu}>
-      {menuOpen ? <FiX /> : <FiMenu />}
-    </button>
-    <ul className={`header__menu ${menuOpen ? 'open' : ''}`}>
-      <li><Link href="/">Accueil</Link></li>
+  const MenuItems = ({ mobile = false }) => (
+    <ul className={`${mobile ? "space-y-4" : "flex space-x-4"}`}>
+      <li>
+        <Button variant="ghost" asChild className="w-full justify-start">
+          <Link
+            href="/"
+            className="text-primary hover:text-secondary transition-colors duration-200"
+          >
+            <Home className="mr-2 h-4 w-4" />
+            <span>Accueil</span>
+          </Link>
+        </Button>
+      </li>
       {!user ? (
         <>
-        <li><Link href="/user/login">Se connecter</Link></li>
-        <li><Link href="/user/register">Créer un compte</Link></li>
+          <li>
+            <Button variant="ghost" asChild className="w-full justify-start">
+              <Link
+                href="/user/login"
+                className="text-primary hover:text-secondary transition-colors duration-200"
+              >
+                <User className="mr-2 h-4 w-4" />
+                <span>Se connecter</span>
+              </Link>
+            </Button>
+          </li>
+          <li>
+            <Button variant="ghost" asChild className="w-full justify-start">
+              <Link
+                href="/user/register"
+                className="text-primary hover:text-secondary transition-colors duration-200"
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                <span>Créer un compte</span>
+              </Link>
+            </Button>
+          </li>
         </>
       ) : (
         <>
-          <li><Link href="/user/formulaire">Créer un événenement</Link></li>
-          <li><a href="#" onClick={handleLogout}>Déconnexion</a></li>
+          <li>
+            <Button variant="ghost" asChild className="w-full justify-start">
+              <Link
+                href="/user/formulaire"
+                className="text-primary hover:text-secondary transition-colors duration-200"
+              >
+                <Calendar className="mr-2 h-4 w-4" />
+                <span>Créer un événement</span>
+              </Link>
+            </Button>
+          </li>
+          <li>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-primary hover:text-secondary transition-colors duration-200"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Déconnexion</span>
+            </Button>
+          </li>
         </>
       )}
-      <li><Link href="#">Contact</Link></li>
+      <li>
+        <Button variant="ghost" asChild className="w-full justify-start">
+          <Link
+            href="#"
+            className="text-primary hover:text-secondary transition-colors duration-200"
+          >
+            <Mail className="mr-2 h-4 w-4" />
+            <span>Contact</span>
+          </Link>
+        </Button>
+      </li>
     </ul>
-  </div>
-      <Link className="header__a" href="/">
-        <div className="header__middle">
-          <h1>BradEnOr</h1>
+  );
+
+  return (
+    <header className="bg-background border-b border-primary">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <Link
+          href="/"
+          className="text-2xl font-bold text-primary hover:text-secondary transition-colors duration-200"
+        >
+          BradEnOr
+        </Link>
+
+        <nav className="hidden md:block">
+          <MenuItems />
+        </nav>
+
+        <div className="flex items-center space-x-4">
+          {user ? (
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-primary">
+                Bonjour, {user.prenom}
+              </span>
+              <Avatar>
+                <AvatarImage src={user.avatar || ""} alt={user.prenom} />
+                <AvatarFallback className="bg-secondary text-text">
+                  {user.prenom[0]}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          ) : (
+            <Button
+              asChild
+              className="bg-primary text-background hover:bg-secondary transition-colors duration-200"
+            >
+              <Link href="/user/login">Se connecter</Link>
+            </Button>
+          )}
+
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="md:hidden">
+                <Menu className="h-6 w-6 text-primary" />
+                <span className="sr-only">Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="w-[300px] sm:w-[400px] bg-background"
+            >
+              <nav className="mt-6">
+                <MenuItems mobile />
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
-      </Link>
-      <div className="header__right">
-        {!user ? (
-          <button className="header__login-button cta-button">
-            <Link href="/user/login"><FiUser /></Link>
-          </button>
-        ) : (
-          <div className="header__user-info">
-            <span>Bonjour, {user.prenom}</span>
-            <button className="header__logout-button cta-button" onClick={handleLogout}>
-              <FiLogOut />
-            </button>
-          </div>
-        )}
       </div>
     </header>
   );
-};
-
-export default Header;
-
+}
