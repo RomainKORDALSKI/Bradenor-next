@@ -1,62 +1,58 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 const NavNearby = ({ closeModal }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const router = useRouter();
   const [cachedPosition, setCachedPosition] = useState(null);
+  const inputRef = useRef(null);
 
-  const handleInputChange = async (value) => {
-    setQuery(value);
-
-    if (value.length > 2) {
-      try {
-        const response = await axios.get(
-          `https://geo.api.gouv.fr/communes?nom=${value}&fields=nom,code,codesPostaux,codeDepartement&boost=population&limit=10`
-        );
-        const options = response.data.map((item) => ({
-          value: item,
-          label: `${item.nom}, ${item.codesPostaux}`,
-        }));
-        setSuggestions(options);
-        setOpen(true);
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (query.length > 2) {
+        try {
+          const response = await axios.get(
+            `https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,code,codesPostaux,codeDepartement&boost=population&limit=10`
+          );
+          setSuggestions(response.data);
+        } catch (error) {
+          console.error("Error fetching suggestions:", error);
+          setSuggestions([]);
+        }
+      } else {
+        setSuggestions([]);
       }
-    } else {
-      setSuggestions([]);
-      setOpen(false);
-    }
+    };
+
+    fetchSuggestions();
+  }, [query]);
+
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
   };
 
-  const handleSuggestionSelect = (selectedOption) => {
-    if (selectedOption) {
-      const { nom, codeDepartement, codesPostaux } = selectedOption.value;
+  const handleSuggestionSelect = (selectedItem) => {
+    if (selectedItem) {
+      const { nom, codeDepartement, codesPostaux } = selectedItem;
       const codePostal =
         codesPostaux && codesPostaux.length > 0 ? codesPostaux[0] : "";
       setQuery(`${nom}, ${codeDepartement} (${codePostal})`);
       setSuggestions([]);
-      setOpen(false);
       router.push(`/${codeDepartement}/${nom}?cp=${codePostal}`);
       closeModal();
     }
@@ -103,39 +99,35 @@ const NavNearby = ({ closeModal }) => {
 
   return (
     <div className="space-y-4">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-          >
-            {query || "Recherchez une ville"}
-            <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
-          <Command>
-            <CommandInput
-              placeholder="Recherchez une ville"
-              value={query}
-              onValueChange={handleInputChange}
-            />
-            <CommandEmpty>Aucune suggestion trouvée</CommandEmpty>
-            <CommandGroup>
-              {suggestions.map((option) => (
-                <CommandItem
-                  key={option.value.code}
-                  onSelect={() => handleSuggestionSelect(option)}
-                >
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+      <div className="relative">
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder="Recherchez une ville"
+          value={query}
+          onChange={handleInputChange}
+          className="w-full"
+        />
+        {suggestions.length > 0 && (
+          <Command className="absolute w-full mt-1 bg-background border border-input rounded-md shadow-md">
+            <CommandList>
+              <CommandEmpty>Aucune suggestion trouvée</CommandEmpty>
+              <CommandGroup>
+                {suggestions.map((item) => (
+                  <CommandItem
+                    key={item.code}
+                    onSelect={() => handleSuggestionSelect(item)}
+                    className="cursor-pointer"
+                  >
+                    {item.nom}, {item.codeDepartement} (
+                    {item.codesPostaux[0] || ""})
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
-        </PopoverContent>
-      </Popover>
+        )}
+      </div>
       <div className="flex space-x-2">
         <Button
           className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"

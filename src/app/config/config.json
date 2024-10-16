@@ -3,22 +3,39 @@
     "username": "braderie",
     "password": "braderie",
     "database": "braderie",
-    "host": "localhost",
-    "dialect": "postgres"
+    "host": "braderie@database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "test": {
     "username": "braderie",
     "password": "braderie",
     "database": "braderie",
-    "host": "localhost",
-    "dialect": "postgres"
+    "host": "braderie@database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "production": {
     "username": "braderie",
     "password": "braderie",
     "database": "braderie",
-    "host": "localhost",
-    "dialect": "postgres"
+    "host": "braderie@database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
-

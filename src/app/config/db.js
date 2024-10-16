@@ -11,9 +11,7 @@ const { PGUSER, PGPASSWORD, PGHOST, PGPORT, PGDATABASE } = process.env;
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   protocol: "postgres",
-  define: {
-    underscored: true,
-  },
+  dialectModule: require("pg"),
   logging: false,
   dialectOptions: {
     ssl: {
@@ -22,13 +20,5 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     },
   },
 });
-// Tester la connexion à la base de données
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connexion à la base de données établie avec succès.");
-  })
-  .catch((error) => {
-    console.error("Impossible de se connecter à la base de données:", error);
-  });
+
 module.exports = sequelize;

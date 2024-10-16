@@ -76,7 +76,7 @@ const EventCalendar = ({ closeModal }) => {
             eventDates.some((eventDate) => isSameDay(eventDate, date)),
         }}
         modifiersClassNames={{
-          eventDay: "bg-primary text-primary-foreground font-bold",
+          eventDay: "bg-secondary text-primary-foreground font-bold",
         }}
       />
     </div>

@@ -18,4 +18,3 @@ module.exports = {
     await queryInterface.removeColumn("Users", "resetPasswordExpires");
   },
 };
-//a ete generer par la commande sequelize migration:generate --name add-reset-password-fields-to-users
