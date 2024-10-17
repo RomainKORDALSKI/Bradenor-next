@@ -18,11 +18,16 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST }}         # L'adresse IP de ton EC2
+          username: ${{ secrets.EC2_USER }}      # Nom d'utilisateur, par exemple 'ubuntu'
+          key: ${{ secrets.EC2_SSH_KEY }}        # Ta clé SSH privée
           script: |
-            cd Bradenor-next  # Se rendre dans le répertoire de l'application
+            # Charger NVM pour avoir accès à npm et node
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Charger nvm
+
+            # Se rendre dans le répertoire de l'application
+            cd ~/Bradenor-next  # Utiliser ~ pour le répertoire home de l'utilisateur
 
             # Étape 3: Récupérer les dernières modifications du code
             git pull origin main
@@ -34,5 +39,6 @@ jobs:
             npm run build
 
             # Étape 6: Redémarrer l'application avec PM2
-            npm start
+            pm2 restart all  # Assure-toi que ton app est gérée par PM2
+
 
