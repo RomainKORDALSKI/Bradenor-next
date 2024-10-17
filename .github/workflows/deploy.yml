@@ -1,0 +1,38 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1: Récupère le code depuis GitHub
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Étape 2: Se connecter à EC2 via SSH et effectuer les actions
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd Bradenor-next  # Se rendre dans le répertoire de l'application
+
+            # Étape 3: Récupérer les dernières modifications du code
+            git pull origin main
+
+            # Étape 4: Installer les dépendances du projet
+            npm install
+
+            # Étape 5: Construire l'application (important pour React, Next.js, etc.)
+            npm run build
+
+            # Étape 6: Redémarrer l'application avec PM2
+            npm start
+

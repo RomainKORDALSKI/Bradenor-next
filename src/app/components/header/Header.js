@@ -68,7 +68,7 @@ const Header = () => {
       </div>
       <Link className="header__a" href="/">
         <div className="header__middle">
-          <h1>BradEnOr</h1>
+          <h1>BradEnOr*</h1>
         </div>
       </Link>
       <div className="header__right">
