@@ -10,9 +10,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "@/app/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
 import {
   Table,
   TableBody,
@@ -20,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -29,12 +29,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/app/components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/components/ui/tabs";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import { Label } from "@/app/components/ui/label";
+import { Textarea } from "@/app/components/ui/textarea";
 import { Search, Edit, Trash2, Plus, ArrowUpDown } from "lucide-react";
 
 // Custom Pagination component
@@ -76,8 +81,8 @@ const initialFormData = {
   organisateur_personne_morale: "",
   organisateur_telephone: "",
   organisateur_facebook: "",
-  latitude: "",
-  longitude: "",
+  latitude: null,
+  longitude: null,
 };
 
 const AdminDashboard = () => {
@@ -290,6 +295,7 @@ const AdminDashboard = () => {
                 <TabsTrigger value="details">Détails</TabsTrigger>
                 <TabsTrigger value="organisateur">Organisateur</TabsTrigger>
               </TabsList>
+
               <TabsContent value="general">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -298,6 +304,60 @@ const AdminDashboard = () => {
                       id="ville"
                       name="ville"
                       value={formData.ville}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pays">Pays</Label>
+                    <Input
+                      id="pays"
+                      name="pays"
+                      value={formData.pays}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="departement">Département</Label>
+                    <Input
+                      id="departement"
+                      name="departement"
+                      value={formData.departement}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="arrondissement">Arrondissement</Label>
+                    <Input
+                      id="arrondissement"
+                      name="arrondissement"
+                      value={formData.arrondissement}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="code_postal">Code Postal</Label>
+                    <Input
+                      id="code_postal"
+                      name="code_postal"
+                      value={formData.code_postal}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="salle">Salle</Label>
+                    <Input
+                      id="salle"
+                      name="salle"
+                      value={formData.salle}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rue">Rue</Label>
+                    <Input
+                      id="rue"
+                      name="rue"
+                      value={formData.rue}
                       onChange={handleChange}
                     />
                   </div>
@@ -332,6 +392,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </TabsContent>
+
               <TabsContent value="details">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -403,8 +464,21 @@ const AdminDashboard = () => {
                       Réservé aux particuliers
                     </Label>
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="exposant_heure_arrivee">
+                      Heure d'arrivée exposant
+                    </Label>
+                    <Input
+                      id="exposant_heure_arrivee"
+                      name="exposant_heure_arrivee"
+                      type="time"
+                      value={formData.exposant_heure_arrivee}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
               </TabsContent>
+
               <TabsContent value="organisateur">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">

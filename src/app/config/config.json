@@ -1,22 +1,16 @@
 {
   "development": {
-    "username": "braderie",
-    "password": "braderie",
-    "database": "braderie",
-    "host": "braderie@database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.com",
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      }
-    }
+    "username": "braderiedev",
+    "password": "braderiedev",
+    "database": "braderiedev",
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "test": {
     "username": "braderie",
     "password": "braderie",
     "database": "braderie",
-    "host": "braderie@database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.com",
+    "host": "database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.comm",
     "dialect": "postgres",
     "dialectOptions": {
       "ssl": {
@@ -29,7 +23,7 @@
     "username": "braderie",
     "password": "braderie",
     "database": "braderie",
-    "host": "braderie@database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.com",
+    "host": "database-kordalski.cjsk6io42bmi.eu-north-1.rds.amazonaws.comm",
     "dialect": "postgres",
     "dialectOptions": {
       "ssl": {

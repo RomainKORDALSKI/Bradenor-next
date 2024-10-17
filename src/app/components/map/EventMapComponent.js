@@ -7,19 +7,19 @@ import { format } from "date-fns";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/app/components/ui/button";
+import { Calendar } from "@/app/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/components/ui/popover";
 import SearchControl from "@/app/components/map/SearchControl";
 import LocateControl from "@/app/components/map/LocateControl";
 import { generateMapLinks } from "@/app/utils/generateMapLinks";
 
 const EventMapComponent = ({ events }) => {
-  const position = [50.5117484, 2.8320165];
+  const position = [50.5117484, 2.8320165]; // Position par défaut de la carte
   const [selectedDate, setSelectedDate] = useState(null);
 
   const filteredEvents = events.filter((event) => {
@@ -76,6 +76,14 @@ const EventMapComponent = ({ events }) => {
           <SearchControl />
           <LocateControl />
           {filteredEvents.map((event) => {
+            // Vérifiez que latitude et longitude existent
+            if (event.latitude == null || event.longitude == null) {
+              console.warn(
+                `Skipping event with id ${event.id} due to missing coordinates.`
+              );
+              return null; // Ne rien rendre pour cet événement
+            }
+
             const { wazeLink, googleMapsLink } = generateLinks(event);
 
             return (

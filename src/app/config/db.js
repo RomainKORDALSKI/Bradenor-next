@@ -1,5 +1,5 @@
-import { Sequelize } from "sequelize";
-import dotenv from "dotenv";
+const Sequelize = require("sequelize");
+const dotenv = require("dotenv");
 
 // Charger les variables d'environnement depuis le fichier .env
 dotenv.config();
@@ -13,12 +13,12 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   protocol: "postgres",
   dialectModule: require("pg"),
   logging: false,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
+  // dialectOptions: {
+  //   ssl: {
+  //     require: true,
+  //     rejectUnauthorized: false,
+  //   },
+  // },
 });
 
 module.exports = sequelize;

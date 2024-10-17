@@ -1,243 +1,459 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+"use client";
 
-export default function AddEvent() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { Button } from "@/app/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/components/ui/select";
+import { Input } from "@/app/components/ui/input";
+import { Textarea } from "@/app/components/ui/textarea";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
-  const [event, setEvent] = useState({
-    pays: '',
-    departement: '',
-    arrondissement: '',
-    code_postal: '',
-    ville: '',
-    salle: '',
-    rue: '',
-    type_braderie: '',
-    date: '',
-    heure_debut_visiteur: '',
-    heure_fin_visiteur: '',
-    nb_exposants: '',
-    toilettes_publiques: false,
-    reserve_aux_particuliers: false,
-    exposant_heure_arrivee: '',
-    emplacement_prix: '',
-    commentaire: '',
-    organisateur_personne_morale: '',
-    organisateur_telephone: '',
-    organisateur_facebook: '',
+export default function EventSubmissionForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const form = useForm({
+    defaultValues: {
+      pays: "",
+      departement: "",
+      arrondissement: "",
+      code_postal: "",
+      ville: "",
+      salle: "",
+      rue: "",
+      type_braderie: "",
+      date: "",
+      heure_debut_visiteur: "",
+      heure_fin_visiteur: "",
+      nb_exposants: "",
+      toilettes_publiques: false,
+      reserve_aux_particuliers: false,
+      exposant_heure_arrivee: "",
+      emplacement_prix: "",
+      commentaire: "",
+      organisateur_personne_morale: "",
+      organisateur_telephone: "",
+      organisateur_facebook: "",
+    },
   });
 
-  const [touchedFields, setTouchedFields] = useState({});
-  const [error, setError] = useState('');
-  const router = useRouter();
-
   useEffect(() => {
-    const token = localStorage.getItem('token');
-
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.push('/user/login');
-    } else {
-      fetch('/api/protected-route', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            router.push('/user/login');
-          }
-        })
-        .catch(() => {
-          router.push('/login');
-        });
+      router.push("/user/login");
     }
   }, [router]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setEvent(prevState => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-    setTouchedFields(prevState => ({
-      ...prevState,
-      [name]: true
-    }));
-  };
-
-  const isFieldInvalid = (fieldName) => {
-    return touchedFields[fieldName] && !event[fieldName] && isFieldRequired(fieldName);
-  };
-
-  const isFieldRequired = (fieldName) => {
-    return ['pays', 'departement', 'code_postal', 'rue', 'type_braderie', 'ville', 'date'].includes(fieldName);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-  
-    const requiredFields = ['pays', 'departement', 'code_postal', 'rue', 'type_braderie', 'ville'];
-    for (const field of requiredFields) {
-      if (!event[field]) {
-        setError(`Le champ ${field} est requis.`);
-        return;
-      }
-    }
-  
+  async function onSubmit(values) {
     try {
-      const res = await fetch('/api/user/createEvent', {
-        method: 'POST',
+      const res = await fetch("/api/user/createEvent", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(event)
+        body: JSON.stringify(values),
       });
-  
+
       if (res.ok) {
-        router.push('/events');
+        toast({
+          title: "Événement créé",
+          description: "Votre événement a été créé avec succès.",
+        });
+        router.push("/events");
       } else {
         const data = await res.json();
-        setError(data.message || 'Une erreur est survenue lors de la création de l\'événement.');
+        toast({
+          title: "Erreur",
+          description:
+            data.message ||
+            "Une erreur est survenue lors de la création de l'événement.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      console.error('Erreur lors de la création de l\'événement:', error);
-      setError('Une erreur est survenue lors de la création de l\'événement.');
+      console.error("Erreur lors de la création de l'événement:", error);
+      toast({
+        title: "Erreur",
+        description:
+          "Une erreur est survenue lors de la création de l'événement.",
+        variant: "destructive",
+      });
     }
-  };
+  }
 
   return (
-    <div className='add-event'>
-      <h1>Ajouter un événement</h1>
-      <p className="required-fields-note">Les champs marqués d'un * sont obligatoires</p>
-      <form onSubmit={handleSubmit}>
-        <div className={`form-field ${isFieldInvalid('pays') ? 'invalid' : ''}`}>
-          <label htmlFor="pays">Pays: *</label>
-          <select id="pays" name="pays" value={event.pays} onChange={handleChange} required>
-            <option value="">Sélectionnez un pays</option>
-            <option value="FR">France</option>
-            <option value="BE">Belgique</option>
-          </select>
-        </div>
-        <div className={`form-field ${isFieldInvalid('departement') ? 'invalid' : ''}`}>
-          <label htmlFor="departement">Département: *</label>
-          <select id="departement" name="departement" value={event.departement} onChange={handleChange} required>
-            <option value="">Sélectionnez un département</option>
-            <option value="Nord">Nord</option>
-            <option value="Pas-de-Calais">Pas-de-Calais</option>
-            <option value="Autre">Autre</option>
-          </select>
-          {event.departement === 'Autre' && (
-            <input
-              type="text"
-              name="departement"
-              value={event.departement === 'Autre' ? '' : event.departement}
-              onChange={handleChange}
-              placeholder="Entrez le département"
-              required
-            />
-          )}
-        </div>
-        <div className="form-field">
-          <label htmlFor="arrondissement">Arrondissement:</label>
-          <input type="text" id="arrondissement" name="arrondissement" value={event.arrondissement} onChange={handleChange} />
-        </div>
-        <div className={`form-field ${isFieldInvalid('code_postal') ? 'invalid' : ''}`}>
-          <label htmlFor="code_postal">Code postal: *</label>
-          <input type="text" id="code_postal" name="code_postal" value={event.code_postal} onChange={handleChange} required />
-        </div>
-        <div className={`form-field ${isFieldInvalid('ville') ? 'invalid' : ''}`}>
-          <label htmlFor="ville">Ville: *</label>
-          <input type="text" id="ville" name="ville" value={event.ville} onChange={handleChange} required/>
-        </div>
-        <div className="form-field">
-          <label htmlFor="salle">Salle:</label>
-          <input type="text" id="salle" name="salle" value={event.salle} onChange={handleChange} />
-        </div>
-        <div className={`form-field ${isFieldInvalid('rue') ? 'invalid' : ''}`}>
-          <label htmlFor="rue">Rue: *</label>
-          <input type="text" id="rue" name="rue" value={event.rue} onChange={handleChange} required />
-        </div>
-        <div className={`form-field ${isFieldInvalid('type_braderie') ? 'invalid' : ''}`}>
-          <label htmlFor="type_braderie">Type de braderie: *</label>
-          <select id="type_braderie" name="type_braderie" value={event.type_braderie} onChange={handleChange} required>
-            <option value="">Sélectionnez un type</option>
-            <option value="Marché aux puces">Marché aux puces</option>
-            <option value="Brocante">Brocante</option>
-            <option value="Vide grenier">Vide grenier</option>
-            <option value="Autre">Autre</option>
-          </select>
-          {event.type_braderie === 'Autre' && (
-            <input
-              type="text"
-              name="type_braderie"
-              value={event.type_braderie === 'Autre' ? '' : event.type_braderie}
-              onChange={handleChange}
-              placeholder="Entrez le type de braderie"
-              required
-            />
-          )}
-        </div>
-        <div className={`form-field ${isFieldInvalid('date') ? 'invalid' : ''}`}>
-          <label htmlFor="date">Date: *</label>
-          <input type="date" id="date" name="date" value={event.date} onChange={handleChange} required/>
-        </div>
-        <div className="form-field">
-          <label htmlFor="heure_debut_visiteur">Heure de début pour les visiteurs:</label>
-          <input type="time" id="heure_debut_visiteur" name="heure_debut_visiteur" value={event.heure_debut_visiteur} onChange={handleChange} />
-        </div>
-        <div className="form-field">
-          <label htmlFor="heure_fin_visiteur">Heure de fin pour les visiteurs:</label>
-          <input type="time" id="heure_fin_visiteur" name="heure_fin_visiteur" value={event.heure_fin_visiteur} onChange={handleChange} />
-        </div>
-        <div className="form-field">
-          <label htmlFor="nb_exposants">Nombre d'exposants:</label>
-          <input type="number" id="nb_exposants" name="nb_exposants" value={event.nb_exposants} onChange={handleChange} />
-        </div>
-        <div className="checkbox-group">
-          <label>
-            <input type="checkbox" name="toilettes_publiques" checked={event.toilettes_publiques} onChange={handleChange} />
-            Toilettes publiques
-          </label>
-        </div>
-        <div className="checkbox-group">
-          <label>
-            <input type="checkbox" name="reserve_aux_particuliers" checked={event.reserve_aux_particuliers} onChange={handleChange} />
-            Réservé aux particuliers
-          </label>
-        </div>
-        <div className="form-field">
-          <label htmlFor="exposant_heure_arrivee">Heure d'arrivée des exposants:</label>
-          <input type="time" id="exposant_heure_arrivee" name="exposant_heure_arrivee" value={event.exposant_heure_arrivee} onChange={handleChange} />
-        </div>
-        <div className="form-field">
-          <label htmlFor="emplacement_prix">Prix de l'emplacement:</label>
-          <input type="number" id="emplacement_prix" name="emplacement_prix" value={event.emplacement_prix} onChange={handleChange} step="0.01" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="commentaire">Commentaire:</label>
-          <textarea id="commentaire" name="commentaire" value={event.commentaire} onChange={handleChange}></textarea>
-        </div>
-        <div className="form-field">
-          <label htmlFor="organisateur_personne_morale">Organisateur (personne morale):</label>
-          <input type="text" id="organisateur_personne_morale" name="organisateur_personne_morale" value={event.organisateur_personne_morale} onChange={handleChange} />
-        </div>
-        <div className="form-field">
-          <label htmlFor="organisateur_telephone">Téléphone de l'organisateur:</label>
-          <input type="tel" id="organisateur_telephone" name="organisateur_telephone" value={event.organisateur_telephone} onChange={handleChange} />
-        </div>
-        <div className="form-field">
-          <label htmlFor="organisateur_facebook">Facebook de l'organisateur:</label>
-          <input type="text" id="organisateur_facebook" name="organisateur_facebook" value={event.organisateur_facebook} onChange={handleChange} />
-        </div>
-        {error && (
-          <div className="errorMessage">
-            <span className="errorIcon">⚠️</span> {error}
-          </div>
-        )}
-        <button type="submit">Ajouter l'événement</button>
-      </form>
-    </div>
+    <Card className="w-full max-w-4xl mx-auto mt-6">
+      <CardHeader>
+        <CardTitle>Ajouter un événement</CardTitle>
+        <CardDescription>
+          Remplissez les détails de votre événement ci-dessous. Les champs
+          marqués d'un * sont obligatoires.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <Tabs defaultValue="general" className="w-full">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="general">Général</TabsTrigger>
+                <TabsTrigger value="details">Détails</TabsTrigger>
+                <TabsTrigger value="organisateur">Organisateur</TabsTrigger>
+                <TabsTrigger value="autres">Autres</TabsTrigger>
+              </TabsList>
+              <TabsContent value="general">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="pays"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pays *</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Sélectionnez un pays" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="FR">France</SelectItem>
+                            <SelectItem value="BE">Belgique</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="departement"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Département *</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Sélectionnez un département" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Nord">Nord</SelectItem>
+                            <SelectItem value="Pas-de-Calais">
+                              Pas-de-Calais
+                            </SelectItem>
+                            <SelectItem value="Autre">Autre</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="code_postal"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Code postal *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Code postal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="ville"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ville *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ville" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="rue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Rue *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Rue" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="salle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Salle</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Salle (optionnel)" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </TabsContent>
+              <TabsContent value="details">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="type_braderie"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Type de braderie *</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Sélectionnez un type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Marché aux puces">
+                              Marché aux puces
+                            </SelectItem>
+                            <SelectItem value="Brocante">Brocante</SelectItem>
+                            <SelectItem value="Vide grenier">
+                              Vide grenier
+                            </SelectItem>
+                            <SelectItem value="Autre">Autre</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date *</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="heure_debut_visiteur"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Heure de début pour les visiteurs</FormLabel>
+                        <FormControl>
+                          <Input type="time" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="heure_fin_visiteur"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Heure de fin pour les visiteurs</FormLabel>
+                        <FormControl>
+                          <Input type="time" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="nb_exposants"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nombre d'exposants</FormLabel>
+                        <FormControl>
+                          <Input type="number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="emplacement_prix"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Prix de l'emplacement</FormLabel>
+                        <FormControl>
+                          <Input type="number" step="0.01" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </TabsContent>
+              <TabsContent value="organisateur">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="organisateur_personne_morale"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Organisateur (personne morale)</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="organisateur_telephone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Téléphone de l'organisateur</FormLabel>
+                        <FormControl>
+                          <Input type="tel" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="organisateur_facebook"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Facebook de l'organisateur</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </TabsContent>
+              <TabsContent value="autres">
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="toilettes_publiques"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Toilettes publiques</FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="reserve_aux_particuliers"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Réservé aux particuliers</FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="exposant_heure_arrivee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Heure d'arrivée des exposants</FormLabel>
+                        <FormControl>
+                          <Input type="time" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="commentaire"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Commentaire</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Ajoutez des informations supplémentaires ici"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+            <Button type="submit" className="w-full">
+              Ajouter l'événement
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

@@ -3,16 +3,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { MapPin, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { MapPin, Search, Loader2 } from "lucide-react";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/app/components/ui/command";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NavNearby = ({ closeModal }) => {
   const [query, setQuery] = useState("");
@@ -25,6 +26,7 @@ const NavNearby = ({ closeModal }) => {
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (query.length > 2) {
+        setLoading(true);
         try {
           const response = await axios.get(
             `https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,code,codesPostaux,codeDepartement&boost=population&limit=10`
@@ -33,13 +35,19 @@ const NavNearby = ({ closeModal }) => {
         } catch (error) {
           console.error("Error fetching suggestions:", error);
           setSuggestions([]);
+        } finally {
+          setLoading(false);
         }
       } else {
         setSuggestions([]);
       }
     };
 
-    fetchSuggestions();
+    const debounce = setTimeout(() => {
+      fetchSuggestions();
+    }, 300);
+
+    return () => clearTimeout(debounce);
   }, [query]);
 
   const handleInputChange = (e) => {
@@ -98,7 +106,12 @@ const NavNearby = ({ closeModal }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="space-y-4 p-4 bg-background rounded-lg shadow-md"
+    >
       <div className="relative">
         <Input
           ref={inputRef}
@@ -106,46 +119,63 @@ const NavNearby = ({ closeModal }) => {
           placeholder="Recherchez une ville"
           value={query}
           onChange={handleInputChange}
-          className="w-full"
+          className="w-full pr-10 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
         />
-        {suggestions.length > 0 && (
-          <Command className="absolute w-full mt-1 bg-background border border-input rounded-md shadow-md">
-            <CommandList>
-              <CommandEmpty>Aucune suggestion trouvée</CommandEmpty>
-              <CommandGroup>
-                {suggestions.map((item) => (
-                  <CommandItem
-                    key={item.code}
-                    onSelect={() => handleSuggestionSelect(item)}
-                    className="cursor-pointer"
-                  >
-                    {item.nom}, {item.codeDepartement} (
-                    {item.codesPostaux[0] || ""})
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
+        {loading && (
+          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary animate-spin" />
         )}
+        <AnimatePresence>
+          {suggestions.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute w-full mt-1 bg-background border border-input rounded-md shadow-md z-10"
+            >
+              <Command>
+                <CommandList>
+                  <CommandEmpty>Aucune suggestion trouvée</CommandEmpty>
+                  <CommandGroup>
+                    {suggestions.map((item) => (
+                      <CommandItem
+                        key={item.code}
+                        onSelect={() => handleSuggestionSelect(item)}
+                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+                      >
+                        {item.nom}, {item.codeDepartement} (
+                        {item.codesPostaux[0] || ""})
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div className="flex space-x-2">
         <Button
-          className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+          className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
           onClick={() => handleSuggestionSelect(suggestions[0])}
-          disabled={!suggestions.length}
+          disabled={!suggestions.length || loading}
         >
           <Search className="mr-2 h-4 w-4" /> Rechercher
         </Button>
         <Button
-          className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90"
+          className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors duration-200"
           onClick={handleLocateMe}
           disabled={loading}
         >
-          <MapPin className="mr-2 h-4 w-4" />
+          {loading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <MapPin className="mr-2 h-4 w-4" />
+          )}
           {loading ? "Recherche..." : "Me localiser"}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

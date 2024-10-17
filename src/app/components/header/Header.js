@@ -14,18 +14,18 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetClose,
-} from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { motion } from "framer-motion";
+} from "@/app/components/ui/sheet";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const [user, setUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,9 +50,9 @@ export default function Header() {
     <ul className={`${mobile ? "space-y-4" : "flex space-x-2"}`}>
       {[
         { href: "/", icon: Home, text: "Accueil" },
-        { href: "/events", icon: Calendar, text: "Événements" },
+        { href: "/user/formulaire", icon: Calendar, text: "Créer Événement" },
         { href: "/map", icon: MapPin, text: "Carte" },
-        { href: "/contact", icon: Mail, text: "Contact" },
+        { href: "/user/dashboard", icon: Mail, text: "Compte" },
       ].map((item) => (
         <li key={item.href}>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -100,17 +100,11 @@ export default function Header() {
                 <span className="text-sm font-medium text-primary hidden sm:inline">
                   Bonjour, {user.prenom}
                 </span>
-                <Avatar>
-                  <AvatarImage src={user.avatar || ""} alt={user.prenom} />
-                  <AvatarFallback className="bg-secondary text-background">
-                    {user.prenom[0]}
-                  </AvatarFallback>
-                </Avatar>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleLogout}
-                  className="text-primary hover:bg-primary hover:text-background transition-all duration-200"
+                  className="w-full md:w-auto justify-between text-primary hover:text-secondary transition-all duration-200 bg-background hover:bg-primary/10 border-2 border-primary rounded-full px-6 py-3 shadow-md hover:shadow-lg"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
                   <span className="hidden sm:inline">Déconnexion</span>
@@ -119,7 +113,7 @@ export default function Header() {
             ) : (
               <Button
                 asChild
-                className="bg-primary text-background hover:bg-secondary transition-all duration-200"
+                className="w-full md:w-auto justify-between text-primary hover:text-secondary transition-all duration-200 bg-background hover:bg-primary/10 border-2 border-primary rounded-full px-6 py-3 shadow-md hover:shadow-lg"
               >
                 <Link href="/user/login">
                   <User className="h-4 w-4 mr-2" />
@@ -128,14 +122,37 @@ export default function Header() {
               </Button>
             )}
 
-            <Sheet>
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="md:hidden hover:bg-primary hover:text-background transition-all duration-200"
+                  className="md:hidden text-primary hover:text-secondary transition-all duration-200 bg-background hover:bg-primary/10 border-2 border-primary rounded-full shadow-md hover:shadow-lg"
+                  onClick={() => setIsOpen(true)}
                 >
-                  <Menu className="h-6 w-6" />
+                  <AnimatePresence>
+                    {isOpen ? (
+                      <motion.div
+                        key="close"
+                        initial={{ rotate: 0 }}
+                        animate={{ rotate: 90 }}
+                        exit={{ rotate: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <X className="h-6 w-6" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="menu"
+                        initial={{ rotate: 0 }}
+                        animate={{ rotate: 0 }}
+                        exit={{ rotate: -90 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Menu className="h-6 w-6" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   <span className="sr-only">Menu</span>
                 </Button>
               </SheetTrigger>
@@ -158,7 +175,7 @@ export default function Header() {
                   </Link>
                 </SheetClose>
                 <nav className="mt-6">
-                  <MenuItems mobile onItemClick={() => {}} />
+                  <MenuItems mobile onItemClick={() => setIsOpen(false)} />
                 </nav>
                 {!user && (
                   <div className="mt-6">

@@ -3,16 +3,21 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/app/components/ui/select";
+import { Skeleton } from "@/app/components/ui/skeleton";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { MapPin, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 

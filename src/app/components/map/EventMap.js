@@ -9,11 +9,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/app/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Skeleton } from "@/app/components/ui/skeleton";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/components/ui/tabs";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { MapPin, Calendar, Users } from "lucide-react";
 
 const EventMap = () => {

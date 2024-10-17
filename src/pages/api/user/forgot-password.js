@@ -1,4 +1,4 @@
-import { User } from "@/app/models";
+import User from "@/app/models/User";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 export default async function handler(req, res) {

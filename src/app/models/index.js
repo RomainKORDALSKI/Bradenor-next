@@ -1,8 +1,10 @@
-const sequelize = require('@/app/config/db');
-const User = require('@/app/models/User');
-const Event = require('@/app/models/Event');
+const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require("../config/db");
 
-User.hasMany(Event, { foreignKey: 'userId', as: 'events' });
-Event.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+const User = require("./User");
+const Event = require("./Event");
 
-module.exports = { User, Event, sequelize };
+User.associate({ Event });
+Event.associate({ User });
+
+module.exports = { sequelize, User, Event };

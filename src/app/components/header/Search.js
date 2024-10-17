@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/components/ui/popover";
 import { Calendar, MapPin, Heart, ChevronDown, ChevronUp } from "lucide-react";
 import EventCalendar from "@/app/components/header/EventCalendar";
 import Searchbis from "@/app/components/header/NavNearby";
@@ -32,16 +32,20 @@ const Search = () => {
   const renderPopover = (triggerRef, icon, text, content, key) => (
     <Popover key={key}>
       <PopoverTrigger asChild>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="w-full sm:w-auto"
+        >
           <Button
             ref={triggerRef}
             variant="outline"
-            className="w-full md:w-auto justify-between text-primary hover:text-secondary transition-all duration-200 bg-background hover:bg-primary/10 border-2 border-primary rounded-full px-6 py-3 shadow-md hover:shadow-lg"
+            className="w-full sm:w-auto justify-between text-primary hover:text-secondary transition-all duration-200 bg-background hover:bg-primary/10 border-2 border-primary rounded-full px-4 sm:px-6 py-2 sm:py-3 shadow-md hover:shadow-lg"
             onClick={() => toggleModal(triggerRef)}
           >
             <div className="flex items-center space-x-2">
               {icon}
-              <span className="hidden md:inline">{text}</span>
+              <span className="hidden sm:inline">{text}</span>
             </div>
             <AnimatePresence>
               {activeButton === triggerRef.current ? (
@@ -70,8 +74,8 @@ const Search = () => {
   );
 
   return (
-    <div className="bg-gradient-to-r from-background to-primary/10 p-6 rounded-xl shadow-xl">
-      <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 items-center justify-center">
+    <div className="bg-gradient-to-r from-background to-primary/10 p-4 sm:p-6 rounded-xl shadow-xl">
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 items-center justify-center">
         {renderPopover(
           calendarButtonRef,
           <Calendar className="h-5 w-5" />,
